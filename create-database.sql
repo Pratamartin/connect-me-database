@@ -1,0 +1,78 @@
+-- Criação do banco de dados
+CREATE DATABASE IF NOT EXISTS RedeSocial;
+USE RedeSocial;
+
+-- Tabela USUÁRIO
+CREATE TABLE USUARIO (
+    ID_Usuario INT AUTO_INCREMENT PRIMARY KEY,
+    Nome VARCHAR(100) NOT NULL,
+    Biografia TEXT,
+    Data_Nascimento DATE,
+    Foto VARCHAR(255),
+    Localizacao VARCHAR(100)
+);
+
+-- Tabela INTERESSES
+CREATE TABLE INTERESSES (
+    ID_Usuario INT,
+    Interesse VARCHAR(100),
+    PRIMARY KEY (ID_Usuario, Interesse),
+    FOREIGN KEY (ID_Usuario) REFERENCES USUARIO(ID_Usuario) ON DELETE CASCADE
+);
+
+-- Tabela CONEXÃO
+CREATE TABLE CONEXAO (
+    ID_Usuario1 INT,
+    ID_Usuario2 INT,
+    PRIMARY KEY (ID_Usuario1, ID_Usuario2),
+    FOREIGN KEY (ID_Usuario1) REFERENCES USUARIO(ID_Usuario) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Usuario2) REFERENCES USUARIO(ID_Usuario) ON DELETE CASCADE
+);
+
+-- Tabela GRUPO
+CREATE TABLE GRUPO (
+    ID_Grupo INT AUTO_INCREMENT PRIMARY KEY,
+    Nome VARCHAR(100) NOT NULL,
+    Descricao TEXT
+);
+
+-- Tabela USUARIO_GRUPO
+CREATE TABLE USUARIO_GRUPO (
+    ID_Usuario INT,
+    ID_Grupo INT,
+    Papel VARCHAR(50),
+    PRIMARY KEY (ID_Usuario, ID_Grupo),
+    FOREIGN KEY (ID_Usuario) REFERENCES USUARIO(ID_Usuario) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Grupo) REFERENCES GRUPO(ID_Grupo) ON DELETE CASCADE
+);
+
+-- Tabela POSTAGEM
+CREATE TABLE POSTAGEM (
+    ID_Postagem INT AUTO_INCREMENT PRIMARY KEY,
+    ID_Usuario INT,
+    Data_Hora DATETIME,
+    Tipo ENUM('Texto', 'Imagem', 'Vídeo'),
+    Conteudo TEXT,
+    FOREIGN KEY (ID_Usuario) REFERENCES USUARIO(ID_Usuario) ON DELETE CASCADE
+);
+
+-- Tabela INTERACOES
+CREATE TABLE INTERACOES (
+    ID_Interacao INT AUTO_INCREMENT PRIMARY KEY,
+    ID_Postagem INT,
+    Tipo ENUM('Curtir', 'Comentar', 'Compartilhar'),
+    Data_Hora DATETIME,
+    FOREIGN KEY (ID_Postagem) REFERENCES POSTAGEM(ID_Postagem) ON DELETE CASCADE
+);
+
+-- Tabela MENSAGEM
+CREATE TABLE MENSAGEM (
+    ID_Mensagem INT AUTO_INCREMENT PRIMARY KEY,
+    ID_Usuario_Envia INT,
+    ID_Usuario_Recebe INT,
+    Conteudo TEXT,
+    Data_Hora DATETIME,
+    FOREIGN KEY (ID_Usuario_Envia) REFERENCES USUARIO(ID_Usuario) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Usuario_Recebe) REFERENCES USUARIO(ID_Usuario) ON DELETE CASCADE
+);
+
